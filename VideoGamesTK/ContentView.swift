@@ -14,7 +14,9 @@ struct ContentView: View {
     }
     var body: some View {
         TabView {
-            LoadGamesView().tabItem {
+            NavigationView {
+                LoadGamesView()
+            }.tabItem {
                 Label("Reload", systemImage: "arrowshape.down.circle.fill")
             }
             GameListView().tabItem {
