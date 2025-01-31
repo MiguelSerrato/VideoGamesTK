@@ -21,7 +21,7 @@ struct ContentView: View {
                 Label("Load", systemImage: "arrowshape.down.circle.fill")
             }
             NavigationView {
-                GameListView()
+                GamesListView()
             }.tabItem {
                 Label("Games", systemImage: "formfitting.gamecontroller.fill")
             }
