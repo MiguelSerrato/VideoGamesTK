@@ -8,7 +8,7 @@
 import Foundation
 
 protocol GetGamesUseCaseProtocol {
-    func execute() async throws -> [Game]
+    func execute(onlyCache: Bool) async throws -> [Game]
 }
 
 final class GetGamesUseCase: GetGamesUseCaseProtocol {
@@ -19,7 +19,7 @@ final class GetGamesUseCase: GetGamesUseCaseProtocol {
         self.repository = repository
     }
     
-    func execute() async throws -> [Game] {
-        try await repository.fetchGames()
+    func execute(onlyCache: Bool) async throws -> [Game] {
+        try await onlyCache ? repository.getGames() : repository.fetchGames()
     }
 }

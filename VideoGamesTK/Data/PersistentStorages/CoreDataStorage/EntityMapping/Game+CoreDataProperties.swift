@@ -28,8 +28,9 @@ extension Game {
     @NSManaged public var freeToGameProfileURL: String?
     @NSManaged public var releaseDate: Date?
     @NSManaged public var rate: Double
-    @NSManaged public var nextToPlay: Bool
+    @NSManaged public var isFavorite: Bool
     @NSManaged public var logicDeleted: Bool
+    @NSManaged public var comments: String?
     
 }
 

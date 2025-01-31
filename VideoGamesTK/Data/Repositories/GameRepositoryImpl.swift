@@ -52,7 +52,7 @@ final class GameRepositoryImpl: GameRepository {
     private func retrieveGames() {
         do {
             let request: NSFetchRequest<Game> = Game.fetchRequest()
-            let sortDescriptor = NSSortDescriptor(key: "id", ascending: true)
+            let sortDescriptor = NSSortDescriptor(key: "releaseDate", ascending: false)
             request.sortDescriptors = [sortDescriptor]
             request.returnsObjectsAsFaults = false
             games = try storeContainer.viewContext.fetch(request)
