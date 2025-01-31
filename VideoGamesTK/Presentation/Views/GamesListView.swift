@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct GameListView: View {
+struct GamesListView: View {
     
     @EnvironmentObject var viewModel: GamesViewModel
     @State private var query = ""
     
     var body: some View {
-        List(viewModel.games) { game in
+        List(viewModel.filteredGames) { game in
             ZStack(alignment: .topTrailing) {
                 HStack(alignment: .top) {
                     AsyncImage(url: URL(string: game.thumbnail ?? "")) { result in
@@ -36,10 +36,14 @@ struct GameListView: View {
             }.listRowSeparator(.hidden).frame(maxWidth: .infinity).padding().listRowBackground(Color.clear).background(.white.opacity(0.8)).clipShape(RoundedCorner(radius: 8))
         }.scrollContentBackground(.hidden).listStyle(.plain)
             .navigationTitle("Games")
-            .searchable(text: $query)
-            .onChange(of: query) { newQuery in
-                //Task { await viewModel.search(matching: query) }
-            }.myBackgrounImageStyle().onAppear {
+            .searchable(text: $viewModel.searchText).searchSuggestions({
+                Section {
+                    ForEach(viewModel.getSuggestions(), id: \.self) { suggestion in
+                        Text(suggestion).searchCompletion(suggestion)
+                    }
+                }
+            })
+            .myBackgrounImageStyle().onAppear {
                 viewModel.loadGamesCached()
             }
         
@@ -47,5 +51,5 @@ struct GameListView: View {
 }
 
 #Preview {
-    GameListView().environmentObject(GamesViewModel())
+    GamesListView().environmentObject(GamesViewModel())
 }

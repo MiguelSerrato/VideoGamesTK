@@ -13,9 +13,18 @@ final class GamesViewModel: ObservableObject {
     
     @Published var loading: Bool = false
     var cancellables = Set<AnyCancellable>()
-    
+    @Published var searchText: String = ""
     
     private let getGamesUseCase: GetGamesUseCaseProtocol
+    
+    var filteredGames: [Game] {
+        guard !searchText.isEmpty else {
+            return games
+        }
+        return games.filter { game in
+            (game.title ?? "").localizedCaseInsensitiveContains(searchText) || (game.genre ?? "").localizedCaseInsensitiveContains(searchText)
+        }
+    }
     
     init(getGamesUseCase: GetGamesUseCaseProtocol = GetGamesUseCase()) {
         self.getGamesUseCase = getGamesUseCase
@@ -48,6 +57,17 @@ final class GamesViewModel: ObservableObject {
                 self.loading = false
             }
         }
+    }
+    
+    func getSuggestions() -> [String] {
+        guard !searchText.isEmpty else {
+            return []
+        }
+        var suggestions = games.map { ($0.title ?? "") }
+        suggestions.append(contentsOf: games.map { ($0.genre ?? "") })
+        suggestions = suggestions.filter { $0.localizedStandardContains(searchText) }
+        return Array(Set(suggestions)).sorted()
+        
     }
     
 }
