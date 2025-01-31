@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct VideoGamesTKApp: App {
-    @StateObject private var viewModel: LoadGamesViewModel = LoadGamesViewModel()
+    @StateObject private var viewModel: GamesViewModel = GamesViewModel()
     var body: some Scene {
         WindowGroup {
             ContentView().environmentObject(viewModel)

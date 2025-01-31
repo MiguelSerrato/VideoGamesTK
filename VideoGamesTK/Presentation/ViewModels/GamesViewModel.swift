@@ -8,28 +8,43 @@ import Foundation
 import SwiftUI
 import Combine
 
-final class LoadGamesViewModel: ObservableObject {
+final class GamesViewModel: ObservableObject {
     @Published var games: [Game] = []
     
     @Published var loading: Bool = false
     var cancellables = Set<AnyCancellable>()
     
+    
     private let getGamesUseCase: GetGamesUseCaseProtocol
     
     init(getGamesUseCase: GetGamesUseCaseProtocol = GetGamesUseCase()) {
         self.getGamesUseCase = getGamesUseCase
-        loadGames()
+    }
+    
+    func loadGamesCached() {
+        Task { @MainActor in
+            do {
+                loading = true
+                let games = try await getGamesUseCase.execute(onlyCache: true)
+                self.games = games
+                self.loading = false
+            } catch {
+                print(error)
+                self.loading = false
+            }
+        }
     }
     
     func loadGames() {
         Task { @MainActor in
             do {
                 loading = true
-                let games = try await getGamesUseCase.execute()
-                    self.games = games
-                    self.loading = false
+                let games = try await getGamesUseCase.execute(onlyCache: false)
+                self.games = games
+                self.loading = false
             } catch {
                 print(error)
+                self.games = try await getGamesUseCase.execute(onlyCache: true)
                 self.loading = false
             }
         }

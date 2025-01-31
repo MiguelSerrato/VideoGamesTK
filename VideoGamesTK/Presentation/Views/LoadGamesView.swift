@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LoadGamesView: View {
-    @EnvironmentObject var viewModel: LoadGamesViewModel
+    @EnvironmentObject var viewModel: GamesViewModel
     @State var loading:Bool = false
     
     private var games: [Game] {
@@ -19,8 +19,8 @@ struct LoadGamesView: View {
         
         ZStack {
             VStack {
-                Text("\(games.count)").font(.system(size: 100)).bold().foregroundStyle(ColorManager.backgroundColor).animation(.easeInOut(duration:2.0))
-                Text("Games Loaded").font(.headline).foregroundStyle(ColorManager.backgroundColor).animation(.easeInOut(duration:2.0))
+                Text("\(games.count)").font(.system(size: 80)).bold().foregroundStyle(ColorManager.backgroundColor).animation(.easeInOut(duration:2.0))
+                Text("Games Loaded").font(.headline).foregroundStyle(Color.black).animation(.easeInOut(duration:2.0))
                 /*Button {
                     viewModel.loadGames()
                 } label: {
@@ -44,11 +44,13 @@ struct LoadGamesView: View {
                     }
                 }
             }
+        }.onAppear {
+            viewModel.loadGamesCached()
         }
         
     }
 }
 
 #Preview {
-    LoadGamesView().environmentObject(LoadGamesViewModel())
+    LoadGamesView().environmentObject(GamesViewModel())
 }

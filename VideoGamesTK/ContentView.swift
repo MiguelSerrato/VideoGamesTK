@@ -11,15 +11,18 @@ struct ContentView: View {
     init() {
         UITabBar.appearance().backgroundColor = UIColor.lightGray
         UITabBar.appearance().unselectedItemTintColor = UIColor.gray
+        
     }
     var body: some View {
         TabView {
             NavigationView {
                 LoadGamesView()
             }.tabItem {
-                Label("Reload", systemImage: "arrowshape.down.circle.fill")
+                Label("Load", systemImage: "arrowshape.down.circle.fill")
             }
-            GameListView().tabItem {
+            NavigationView {
+                GameListView()
+            }.tabItem {
                 Label("Games", systemImage: "formfitting.gamecontroller.fill")
             }
         }
