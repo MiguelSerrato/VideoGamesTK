@@ -9,9 +9,10 @@ import SwiftUI
 
 @main
 struct VideoGamesTKApp: App {
+    @StateObject private var viewModel: LoadGamesViewModel = LoadGamesViewModel()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView().environmentObject(viewModel)
         }
     }
 }

@@ -8,14 +8,20 @@
 import SwiftUI
 
 struct ContentView: View {
+    init() {
+        UITabBar.appearance().backgroundColor = UIColor.lightGray
+        UITabBar.appearance().unselectedItemTintColor = UIColor.gray
+    }
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        TabView {
+            LoadGamesView().tabItem {
+                Label("Reload", systemImage: "arrowshape.down.circle.fill")
+            }
+            GameListView().tabItem {
+                Label("Games", systemImage: "formfitting.gamecontroller.fill")
+            }
         }
-        .padding()
+        
     }
 }
 
