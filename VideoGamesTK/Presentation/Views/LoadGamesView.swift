@@ -21,11 +21,6 @@ struct LoadGamesView: View {
             VStack {
                 Text("\(games.count)").font(.system(size: 80)).bold().foregroundStyle(ColorManager.backgroundColor).animation(.easeInOut(duration:2.0))
                 Text("Games Loaded").font(.headline).foregroundStyle(Color.black).animation(.easeInOut(duration:2.0))
-                /*Button {
-                    viewModel.loadGames()
-                } label: {
-                    Text("Reload").font(.headline).foregroundStyle(.white).frame(maxWidth: .infinity).padding().background(ColorManager.backgroundColor).cornerRadius(8).padding()
-                }*/
             }.padding().background(Color(uiColor: UIColor.lightGray).opacity(0.5)).cornerRadius(8).onTapGesture {
                 viewModel.loadGames()
             }
@@ -46,6 +41,10 @@ struct LoadGamesView: View {
             }
         }.onAppear {
             viewModel.loadGamesCached()
+        }.alert("Error", isPresented: $viewModel.showError) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(viewModel.errorMessage)
         }
         
     }
