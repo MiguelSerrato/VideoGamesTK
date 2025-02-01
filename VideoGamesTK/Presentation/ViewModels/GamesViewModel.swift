@@ -26,6 +26,9 @@ final class GamesViewModel: ObservableObject {
         }
     }
     
+    @Published var showError: Bool = false
+    var errorMessage: String = ""
+    
     init(getGamesUseCase: GetGamesUseCaseProtocol = GetGamesUseCase()) {
         self.getGamesUseCase = getGamesUseCase
     }
@@ -40,6 +43,8 @@ final class GamesViewModel: ObservableObject {
             } catch {
                 print(error)
                 self.loading = false
+                self.errorMessage = error.localizedDescription
+                self.showError = true
             }
         }
     }
@@ -55,6 +60,8 @@ final class GamesViewModel: ObservableObject {
                 print(error)
                 self.games = try await getGamesUseCase.execute(onlyCache: true)
                 self.loading = false
+                self.errorMessage = error.localizedDescription
+                self.showError = true
             }
         }
     }
