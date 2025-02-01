@@ -59,6 +59,8 @@ final class GamesViewModel: ObservableObject {
         }
     }
     
+    
+    
     func getSuggestions() -> [String] {
         guard !searchText.isEmpty else {
             return []

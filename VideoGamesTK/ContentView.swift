@@ -20,9 +20,7 @@ struct ContentView: View {
             }.tabItem {
                 Label("Load", systemImage: "arrowshape.down.circle.fill")
             }
-            NavigationView {
-                GamesListView()
-            }.tabItem {
+            GamesListView().tabItem {
                 Label("Games", systemImage: "formfitting.gamecontroller.fill")
             }
         }

@@ -49,12 +49,29 @@ final class GameRepositoryImpl: GameRepository {
         return games
     }
     
+    func updateGame(_ game: Game, comments: String?, rating: Int?, isFavorite: Bool) {
+        guard let index = getGameIndex(game) else { return }
+        games[index].comments = comments
+        games[index].rate = Int32(rating ?? 0)
+        games[index].isFavorite = isFavorite
+        saveData()
+        retrieveGames()
+    }
+    
+    func deleteGame(_ game: Game) {
+        guard let index = getGameIndex(game) else { return }
+        games[index].logicDeleted = true
+        saveData()
+        retrieveGames()
+    }
+    
     private func retrieveGames() {
         do {
             let request: NSFetchRequest<Game> = Game.fetchRequest()
             let sortDescriptor = NSSortDescriptor(key: "releaseDate", ascending: false)
             request.sortDescriptors = [sortDescriptor]
             request.returnsObjectsAsFaults = false
+            request.predicate = NSPredicate(format: "logicDeleted = %@", false)
             games = try storeContainer.viewContext.fetch(request)
         } catch {
             print("Error al recuperar todos:")

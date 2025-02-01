@@ -10,6 +10,6 @@ import SwiftUI
 struct ColorManager {
     // create static variables for custom colors
     static let backgroundColor = Color("BackgroundColor")
-    
+    static let customYellow = Color("CustomYellow")
     //... add the rest of your colors here
 }
