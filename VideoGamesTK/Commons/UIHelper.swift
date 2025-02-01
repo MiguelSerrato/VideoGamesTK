@@ -19,8 +19,8 @@ extension View {
 
 extension View {
     
-    func myBackgrounImageStyle() -> some View {
-        self.background(Image("backgroundImage")
+    func myBackgrounImageStyle(name: String = "backgroundImage") -> some View {
+        self.background(Image(name)
             .resizable()
             .scaledToFill()
             .frame(minWidth: 0)

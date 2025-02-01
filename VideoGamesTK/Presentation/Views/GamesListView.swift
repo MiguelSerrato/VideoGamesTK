@@ -11,42 +11,46 @@ struct GamesListView: View {
     
     @EnvironmentObject var viewModel: GamesViewModel
     @State private var query = ""
+    @State var showDetail: Bool = false
+    @State var selectedGame: Game?
     
     var body: some View {
-        List(viewModel.filteredGames) { game in
-            ZStack(alignment: .topTrailing) {
-                HStack(alignment: .top) {
-                    AsyncImage(url: URL(string: game.thumbnail ?? "")) { result in
-                        result.resizable().scaledToFill().frame(width: 80, height: 80, alignment: .center).clipped().contentShape(Rectangle()).clipShape(RoundedCorner(radius: 8))
-                    } placeholder: {
-                        ProgressView()
-                    }.frame(width: 80, height: 80, alignment: .center)
-                    VStack(alignment: .leading) {
-                        Text(game.title ?? "")
-                            .font(.title2).frame(maxWidth: .infinity,alignment: .leading).foregroundStyle(Color.accentColor).lineLimit(1)
-                        
-                        Text(game.genre ?? "").font(.headline)
-                            .foregroundColor(.gray)
-                        Label("0", systemImage: "star.fill").font(.headline).foregroundStyle(Color.accentColor)
-                    }.frame(maxWidth: .infinity).padding(.trailing, 16)
-                }
-                Image(systemName: game.isFavorite ? "heart.fill" : "heart").foregroundStyle(.red).onTapGesture {
+        NavigationStack {
+            List(viewModel.filteredGames, id: \.self) { game in
+                ZStack {
+                    GameCellView(game: game).onTapGesture {
+                        selectedGame = game
+                        showDetail = true
+                    }
+                }.listRowSeparator(.hidden)
+            }.id(UUID()).scrollContentBackground(.hidden).listStyle(.plain)
+                .navigationTitle("Games")
+                .navigationDestination(isPresented: $showDetail, destination: {
+                    if let selectedGame {
+                        GameDetailView(viewModel: GameDetailViewModel(gameSelected: selectedGame))
+                    }
+                })
+                .searchable(text: $viewModel.searchText).searchSuggestions({
+                    Section {
+                        ForEach(viewModel.getSuggestions(), id: \.self) { suggestion in
+                            Text(suggestion).searchCompletion(suggestion)
+                        }
+                    }
+                })
+                .myBackgrounImageStyle().onAppear {
+                    showDetail = false
+                    selectedGame = nil
+                    viewModel.loadGamesCached()
+                    
                     
                 }
-            }.listRowSeparator(.hidden).frame(maxWidth: .infinity).padding().listRowBackground(Color.clear).background(.white.opacity(0.8)).clipShape(RoundedCorner(radius: 8))
-        }.scrollContentBackground(.hidden).listStyle(.plain)
-            .navigationTitle("Games")
-            .searchable(text: $viewModel.searchText).searchSuggestions({
-                Section {
-                    ForEach(viewModel.getSuggestions(), id: \.self) { suggestion in
-                        Text(suggestion).searchCompletion(suggestion)
-                    }
-                }
-            })
-            .myBackgrounImageStyle().onAppear {
-                viewModel.loadGamesCached()
-            }
-        
+        }.scrollContentBackground(.hidden).listRowBackground(Color.red).listStyle(.plain).myBackgrounImageStyle().background {
+            Image("backgroundImage")
+                .resizable()
+                .scaledToFill()
+                .frame(minWidth: 0)
+                .edgesIgnoringSafeArea(.all)
+        }
     }
 }
 
